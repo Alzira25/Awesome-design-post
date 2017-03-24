@@ -1,0 +1,20 @@
+#myForm { 
+  display: block; 
+  margin: 20px auto; 
+  background: #eee; 
+  border-radius: 10px; 
+  padding: 15px; 
+}
+
+#myForm .btn{
+	background-color: #007A5B;
+	color: white;
+	font-weight: bold;
+	border: none;
+	width: 30%;
+}
+
+#myForm .btn:hover{
+	background-color: #00cc99;
+	color: black;
+}
