@@ -1,7 +1,7 @@
 <?php
 
-include("includes/database_connect.php");
-	
+include 'includes/database_connect.php';
+
 //getting the user IP address
 function getIp() {
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -15,3 +15,14 @@ function getIp() {
     return $ip;
 }
 
+/**
+ * @param string $string
+ *
+ * @return string
+ */
+function sanitize($string) {
+    $string = strip_tags($string);
+    // you can add here more sanitization
+
+    return $string;
+}
