@@ -47,7 +47,7 @@ include("functions/func.php");
 <div class="form-group">
  <label for="text">Choose your Graphic Design</label>
    <select class="form-control" name="graphic">
-   	<option>Logo</option>		
+   	<option>Logo</option>
    	<option>Banner</option>
 	<option>Poster</option>
     	<option>Not Specify</option>
@@ -57,7 +57,7 @@ include("functions/func.php");
     <div class="form-group">
      <label for="text">Choose your Website Design</label>
     <select class="form-control" name="website">
-    	<option>Mockup</option>		
+    	<option>Mockup</option>
    	<option>Templates</option>
 	<option>Themes</option>
         <option>Not Specify</option>
@@ -84,7 +84,7 @@ include("functions/func.php");
       <input type="file" name="main_image"/>
          <p class="help-block">Select the design which is the main to display</p>
   </div>
-  
+
   <div class="form-group">
     <label for="images">Upload Your Designs</label>
       <input type="file" id="upload_file" name="images_1"/>
@@ -92,13 +92,13 @@ include("functions/func.php");
       <input type="file" id="upload_file" name="images_3"/>
       <p class="help-block">Select the design for more examples</p>
   </div>
-                      
+
   <div class="form-group">
    <label for="images">Upload Your Project Zip files</label>
      <input type="file" name="zip_file" id="upload_file"/>
        <p class="help-block">The file will not display in details page. Only after buyer's payment is done successfully, they will receive your file by email.</p>
    </div>
-										
+
   <input type="submit" class="btn btn-primary center-block" id="post" name="post" value="POST DESIGNS"/>
 </form>
 
@@ -131,63 +131,79 @@ window.setTimeout(function() {
 </html>
 <?php
 
-if(isset($_POST['post'])){
+if (isset($_POST['post'])) {
                           
-                          //getting the text data from the fields
-                          $title = $_POST['title']; 
-                          $creator = $_POST['creator'];
-                          $date = $_POST['date'];
-                          $graphic = $_POST['graphic'];
-                          $website = $_POST['website'];
-                          $price = $_POST['price'];
-                          $description = $_POST['description'];
-                          $keywords = $_POST['keywords'];
-                          
-                              
-                          //getting the image name from the fields
-                          $main = $_FILES['main_image']['name'];
-                          $images_1 = $_FILES['images_1']['name'];
-                          $images_2 = $_FILES['images_2']['name'];
-                          $images_3 = $_FILES['images_3']['name'];
-
-                          //image tmp name
-                          $main_tmp = $_FILES['main_image']['tmp_name'];
-                          $images_tmp_1 = $_FILES['images_1']['tmp_name'];
-                          $images_tmp_2 = $_FILES['images_2']['tmp_name'];
-                          $images_tmp_3 = $_FILES['images_3']['tmp_name'];
+    //getting the text data from the fields
+    $title = sanitize($_POST['title']);
+    $creator = sanitize($_POST['creator']);
+    $date = sanitize($_POST['date']);
+    $graphic = sanitize($_POST['graphic']);
+    $website = sanitize($_POST['website']);
+    $price = sanitize($_POST['price']);
+    $description = sanitize($_POST['description']);
+    $keywords = sanitize($_POST['keywords']);
 
 
-                          move_uploaded_file($main_tmp, "design_images/$main");
-                          move_uploaded_file($images_tmp_1, "design_images/$images_1");
-                          move_uploaded_file($images_tmp_2, "design_images/$images_2");
-                          move_uploaded_file($images_tmp_3, "design_images/$images_3");
+    //getting the image name from the fields
+    $main = $_FILES['main_image']['name'];
+    $images_1 = $_FILES['images_1']['name'];
+    $images_2 = $_FILES['images_2']['name'];
+    $images_3 = $_FILES['images_3']['name'];
 
-                          
-                          $filename = $_FILES["zip_file"]["name"];
-                          $source = $_FILES["zip_file"]["tmp_name"];
-                          $type = $_FILES["zip_file"]["type"];
-                          
-                          $name = explode(".", $filename);
-                          $accepted_types = array('zip');
-                          if (!in_array(pathinfo($_FILES['zip_file']['name'], PATHINFO_EXTENSION), $accepted_types)){
-                              echo "<div class='alert alert-danger' id='success-alert'>";
-                              echo "<strong>You can't upload this file. Only file with extension .zip is allowed!</strong>";
-                              echo "</div>";
-                              echo "<script>window.open('design-post.php','_self')</script>";
-                          }
-                                  
-                          $target_path = "zip_files/".$filename;  // change this to the correct site path
-                          move_uploaded_file($source, $target_path);
-                                                 
-                         $insert_design = "INSERT INTO products (product_cat, product_web, product_title, product_author, product_expired, product_price, product_desc, product_main_image, product_image_1, product_image_2, product_image_3, zip_file, product_keywords, product_date) VALUES ('$graphic','$website','$title','$creator','$date','$price','$description','$main','$images_1','$images_2','$images_3','$filename','$keywords',NOW())";
-                                                
-                          $run_design = mysqli_query($con, $insert_design);
-                        
-                          if($run_design){
-                              echo "<div class='alert alert-success' id='success-alert'>";
-                              echo "<strong>Your Awesome design has been posted!</strong>";
-                              echo "</div>";
-                              echo "<script>window.open('design-post.php','_self')</script>";
-                            }
-                          }
-                        ?>
+    //image tmp name
+    $main_tmp = $_FILES['main_image']['tmp_name'];
+    $images_tmp_1 = $_FILES['images_1']['tmp_name'];
+    $images_tmp_2 = $_FILES['images_2']['tmp_name'];
+    $images_tmp_3 = $_FILES['images_3']['tmp_name'];
+
+
+    move_uploaded_file($main_tmp, "design_images/$main");
+    move_uploaded_file($images_tmp_1, "design_images/$images_1");
+    move_uploaded_file($images_tmp_2, "design_images/$images_2");
+    move_uploaded_file($images_tmp_3, "design_images/$images_3");
+
+
+    $filename = $_FILES["zip_file"]["name"];
+    $source = $_FILES["zip_file"]["tmp_name"];
+    $type = $_FILES["zip_file"]["type"];
+
+    $name = explode(".", $filename);
+    $accepted_types = array('zip');
+    if (!in_array(pathinfo($_FILES['zip_file']['name'], PATHINFO_EXTENSION), $accepted_types)){
+        echo "<div class='alert alert-danger' id='success-alert'>";
+        echo "<strong>You can't upload this file. Only file with extension .zip is allowed!</strong>";
+        echo "</div>";
+        echo "<script>window.open('design-post.php','_self')</script>";
+    }
+
+    $target_path = "zip_files/".$filename;  // change this to the correct site path
+    move_uploaded_file($source, $target_path);
+
+//   $insert_design = "INSERT INTO products (product_cat, product_web, product_title, product_author, product_expired, product_price, product_desc, product_main_image, product_image_1, product_image_2, product_image_3, zip_file, product_keywords, product_date)
+//VALUES ('$graphic','$website','$title','$creator','$date','$price','$description','$main','$images_1','$images_2','$images_3','$filename','$keywords',NOW())";
+
+   $sql = "INSERT INTO products
+   SET 
+    id_category = ?,
+    price = ?,
+    web = ?,
+    title = ?,
+    author = ?,
+    expired = ?,
+    description = ?";
+
+    $smtp = $con->prepare($sql);
+  /**
+   * d => digital number (integer)
+   * s => string
+   */
+    $smtp->bind_param('ddsssss', $graphic, $price, $website, $title, $creator, $date, $description);
+    $smtp->execute();
+
+    if($run_design){
+      echo "<div class='alert alert-success' id='success-alert'>";
+      echo "<strong>Your Awesome design has been posted!</strong>";
+      echo "</div>";
+      echo "<script>window.open('design-post.php','_self')</script>";
+    }
+}
