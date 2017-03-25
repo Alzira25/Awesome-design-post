@@ -1,0 +1,6 @@
+{
+    "require": {
+        "kisphp/database": "^2.0",
+        "twbs/bootstrap": "~3.3.7"
+    }
+}
